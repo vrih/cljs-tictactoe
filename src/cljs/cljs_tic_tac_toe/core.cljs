@@ -1,7 +1,6 @@
 (ns cljs-tic-tac-toe.core
   (:require
-   [reagent.core :as reagent]
-   ))
+   [reagent.core :as reagent]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17,35 +16,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Page
 
-(defn horizontal-victory [rows]
+(defn three-in-a-row? [rows]
   (some true?
         (map #(apply = %)
              (filter #(not-any? (fn [x] (= 0 x)) %) rows))))
 
-(defn vertical-victory []
-  (horizontal-victory
-   (map (fn [x] (map #(get % x) (:board @app-state))) (range 0 3))))
-
-(defn diagonal-victory []
-  (let [b (:board @app-state)
-        tl [[(get-in b [0 0]) (get-in b [1 1]) (get-in b [2 2])]
+(defn victory-checker [b]
+  (let [tl [[(get-in b [0 0]) (get-in b [1 1]) (get-in b [2 2])]
             [(get-in b [0 2]) (get-in b [1 1]) (get-in b [2 0])]]]
-    (horizontal-victory tl)))
-
-(defn victory-checker []
-  (or 
-   (horizontal-victory (:board @app-state))
-   (vertical-victory)
-   (diagonal-victory)))
-
+    (some true? (map three-in-a-row? [b (apply map list b) tl]))))
 
 (defn move [x y]
   (let [current (get-in @app-state [:board y x])]
-    (when (and (not (victory-checker))(= current 0))
+    (when (and (not (victory-checker (:board @app-state)))(= current 0))
       (swap! app-state assoc-in [:board y x] (token (:player @app-state)))
-      (swap! app-state assoc :player (not (:player @app-state)))))
-                                        ; victory checker
-  )
+      (swap! app-state assoc :player (not (:player @app-state))))))
 
 (defn render-row [y row]
   (map-indexed (fn [x piece] [:div {:class "piece" :on-click #(move x y) :key (str "piece" y x)} (player-piece piece)]) row))
@@ -58,8 +43,7 @@
    (render-board (:board @ratom))
    (if (victory-checker)
      (str "Winner: " (player-piece (token (not (:player @app-state)))))
-     (str "Player: " (player-piece (token (:player @app-state)))))
-   ])
+     (str "Player: " (player-piece (token (:player @app-state)))))])
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

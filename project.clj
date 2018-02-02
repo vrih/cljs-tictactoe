@@ -1,13 +1,15 @@
 (defproject cljs-tic-tac-toe "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
+[lein-doo "0.1.7"]
                  [reagent "0.6.1"]]
 
   :min-lein-version "2.5.3"
 
   :source-paths ["src/clj"]
 
-  :plugins [[lein-cljsbuild "1.1.4"]]
+  :plugins [[lein-cljsbuild "1.1.4"]
+ [lein-doo "0.1.7"]           ]
 
   :clean-targets ^{:protect false} ["resources/public/js"
                                     "target"]
@@ -43,4 +45,29 @@
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}
 
+    {:id           "test"
+     :source-paths ["src/cljs" "test"]
+     :compiler     {:main            runners.doo
+                    :optimizations   :none
+                    :output-to       "resources/public/tests/all-tests.js"
+                    :pretty-print    true}}
     ]})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
