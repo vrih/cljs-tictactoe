@@ -19,7 +19,7 @@
 (defn three-in-a-row? [rows]
   (some true?
         (map #(apply = %)
-             (filter #(not-any? (fn [x] (= 0 x)) %) rows))))
+             (filter #(not-any? zero? %) rows))))
 
 (defn victory-checker [b]
   (let [tl [[(get-in b [0 0]) (get-in b [1 1]) (get-in b [2 2])]
@@ -28,7 +28,7 @@
 
 (defn move [x y]
   (let [current (get-in @app-state [:board y x])]
-    (when (and (not (victory-checker (:board @app-state)))(= current 0))
+    (when (and (not (victory-checker (:board @app-state)))(zero? current))
       (swap! app-state assoc-in [:board y x] (token (:player @app-state)))
       (swap! app-state assoc :player (not (:player @app-state))))))
 

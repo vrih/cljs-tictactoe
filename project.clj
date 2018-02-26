@@ -9,8 +9,9 @@
   :source-paths ["src/clj"]
 
   :plugins [[lein-cljsbuild "1.1.4"]
- [lein-doo "0.1.7"]           ]
-
+            [lein-kibit "0.1.5"]
+            [lein-doo "0.1.7"]]
+  
   :clean-targets ^{:protect false} ["resources/public/js"
                                     "target"]
 
